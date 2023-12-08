@@ -27,3 +27,31 @@
 ```
 git clone git@github.com:AbbadonAA/bs4_parser_pep.git
 ```
+2.Создайте и активируйте venv,установите зависимости (для OS Windows)
+```
+python -m venv venv
+source venv/Scripts/activate
+pip install -r requirements.txt
+```
+3. Проект готов к запуску из директории /src
+
+### Управление
+1.Вызов справки по доступным аргументам:
+```
+python src/main.py -h
+```
+2. Выбор режима работы:
+```
+python src/main.py whats-new
+```
+```
+python src/main.py latest-versions
+```
+```
+python src/main.py download
+```
+```
+python src/main.py pep
+```
+
+### Автор
