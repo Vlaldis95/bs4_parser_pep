@@ -55,3 +55,4 @@ python src/main.py pep
 ```
 
 ### Автор
+:white_check_mark: Владислав Лукьяненко (https://github.com/Vlaldis95)
