@@ -24,3 +24,13 @@ def find_tag(soup, tag, attrs=None):
         logging.error(error_msg, stack_info=True)
         raise ParserFindTagException(error_msg)
     return searched_tag
+
+
+def find_a_tag(ul_tags):
+    for ul in ul_tags:
+        if 'All versions' in ul.text:
+            a_tags = ul.find_all('a')
+            break
+        else:
+            raise Exception('Ничего не нашлось')
+    return a_tags

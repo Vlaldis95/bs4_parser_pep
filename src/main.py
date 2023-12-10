@@ -10,7 +10,7 @@ from tqdm import tqdm
 from configs import configure_argument_parser, configure_logging
 from constants import BASE_DIR, EXPECTED_STATUS, MAIN_DOC_URL, PEP_URL
 from outputs import control_output
-from utils import find_tag, get_response
+from utils import find_tag, get_response, find_a_tag
 
 
 def whats_new(session):
@@ -25,6 +25,7 @@ def whats_new(session):
     sections_by_python = div_with_ul.find_all(
         'li', attrs={'class': 'toctree-l1'})
     results = [('Ссылка на статью', 'Заголовок', 'Редактор, Автор')]
+
     for section in tqdm(sections_by_python):
         version_a_tag = section.find('a')
         href = version_a_tag['href']
@@ -47,14 +48,10 @@ def latest_versions(session):
     soup = BeautifulSoup(response.text, features='lxml')
     sidebar = find_tag(soup, 'div', attrs={'class': 'sphinxsidebarwrapper'})
     ul_tags = sidebar.find_all('ul')
-    for ul in ul_tags:
-        if 'All versions' in ul.text:
-            a_tags = ul.find_all('a')
-            break
-        else:
-            raise Exception('Ничего не нашлось')
+    a_tags = find_a_tag(ul_tags)
     results = [('Ссылка на документацию', 'Версия', 'Статус')]
     pattern = r'Python (?P<version>\d\.\d+) \((?P<status>.*)\)'
+
     for a_tag in a_tags:
         link = a_tag['href']
         text_match = re.search(pattern, a_tag.text)
@@ -62,9 +59,7 @@ def latest_versions(session):
             version, status = text_match.groups()
         else:
             version, status = a_tag.text, ''
-        results.append(
-            (link, version, status)
-        )
+        results.append((link, version, status))
     return results
 
 
@@ -102,6 +97,7 @@ def pep(session):
     tr_tags = tbody_tag.find_all('tr')
     results = [('Статус', 'Количество')]
     statuses = []
+
     for tr_tag in tr_tags:
         td = find_tag(tr_tag, 'td')
         status = td.text[1:]
